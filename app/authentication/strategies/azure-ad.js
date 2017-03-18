@@ -1,28 +1,19 @@
-const passport = require('passport');
+const authConfig = require('./../../../config/auth').azureAuth;
 const BearerStrategy = require('passport-azure-ad').BearerStrategy;
-
-const options = {
-    identityMetadata: process.env.IDENTITY_METADATA,
-    clientID: process.env.CLIENT_ID,
-    audience: process.env.AUDIENCE,
-    validateIssuer: process.env.VALIDATE_ISSUER,
-    passReqToCallback: process.env.PASS_REQ_TO_CALLBACK
-};
 
 let owner = null;
 
-const bearerStrategy = new BearerStrategy(options, (token, done) => {
+const bearerStrategy = new BearerStrategy(authConfig, (token, done) => {
 
+    console.log('fetching ad user profile...')
     if (!token.oid) {
 
-    done(new Error('oid is not found in token'));
+        done (new Error('oid is not found in token'));
     } else {
-
+        console.log('User profile found');
         owner = token.oid;
         done(null, token);
     }
 });
 
-passport.use(bearerStrategy);
-
-
+module.exports = bearerStrategy;

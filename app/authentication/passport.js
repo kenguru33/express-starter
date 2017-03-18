@@ -1,13 +1,13 @@
 const passport = require('passport');
+const azureADBearerStrategy = require('./strategies/azure-ad');
 
-const auth = function (app) {
+module.exports = function (app) {
 
-    app.use(passport.initialize()); // Starts passport.
-    app.use(passport.session()); // Provides session support.
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-    require('./strategies/azure-ad');
+    passport.use(azureADBearerStrategy);
+
+    return passport;
+
 };
-
-
-module.exports = auth;
-
